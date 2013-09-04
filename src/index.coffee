@@ -31,14 +31,13 @@ module.exports = class KeywordProcesser
       throw err if err
       fileList.forEach (file) =>
         filePath = "#{folder}/#{file}"
-        unless @filePattern.test file
-          @processFile filePath
         @processFile filePath
 
   processFile: (file) ->
     fs.exists file, (isExist) =>
       return console.log(file, "is not exist") if not isExist
-      return if isImageOrFont = /\.(?:jpg|gif|png|eot|svg|ttf|woff)$/.test(file)
+      return unless isFiltered = @filePattern.test file
+      return if isImageOrFont = /\.(?:jpg|gif|png|eot|svg|ttf|woff|ico)$/.test(file)
       return @processFolder(file) if fs.lstatSync(file).isDirectory()
       return unless fileContent = fs.readFileSync file, "utf-8"
 
